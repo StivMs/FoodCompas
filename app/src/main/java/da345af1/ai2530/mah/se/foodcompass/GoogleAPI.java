@@ -19,16 +19,11 @@ import java.util.List;
 
 
 public class GoogleAPI {
-
-
-    private Controller controller;
-    private APItestFragment apiTestFragment;
+    
     JSONObject data = null;
 
 
-    public GoogleAPI(Controller controller, APItestFragment apiTestFragment) {
-        this.controller = controller;
-        this.apiTestFragment = apiTestFragment;
+    public GoogleAPI() {
     }
 
     public void run() {

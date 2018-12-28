@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/container"
     tools:context=".MainActivity">
 
-   <!-- <fragment
+    <fragment
         android:id="@+id/fragment"
         android:name="da345af1.ai2530.mah.se.foodcompass.DistanceFragment"
         android:layout_width="wrap_content"
@@ -19,5 +18,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_distance" />-->
+        tools:layout="@layout/fragment_distance" />
 </android.support.constraint.ConstraintLayout>

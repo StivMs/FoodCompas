@@ -49,7 +49,7 @@ public class GoogleAPI {
         sb.append("&radius=" + mRadius);
         sb.append("&types=" + "restaurant");
         sb.append("&keyword=" + keyword);
-        sb.append("&key=AIzaSyAGEFtNcGxF-OogaGYzjCtfj2tbkZgSZG0");
+        sb.append("&key= PUT OUR KEY");
 
         Log.d("Map", "api: " + sb.toString());
 

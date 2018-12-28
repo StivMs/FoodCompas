@@ -27,7 +27,7 @@ public class FoodChoiceFragment extends Fragment {
     private RadioButton rbSalad;
     private RadioButton rbPizza;
     private RadioButton rbSushi;
-
+    FragmentController controller;
 
     public FoodChoiceFragment() {
         // Required empty public constructor
@@ -62,6 +62,10 @@ public class FoodChoiceFragment extends Fragment {
         rbSushi.setOnClickListener(new ButtonListener());
     }
 
+    public void setController(FragmentController fragmentController) {
+        this.controller = fragmentController;
+    }
+
 
     private class ButtonListener implements View.OnClickListener {
         @Override
@@ -78,6 +82,7 @@ public class FoodChoiceFragment extends Fragment {
                     break;
                 case R.id.btnFoodNext:
                     //Change fragment to the next one
+                    controller.fragmentOption("compassFragment");
                     break;
             }
         }

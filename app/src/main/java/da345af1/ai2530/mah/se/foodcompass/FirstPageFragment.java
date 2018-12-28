@@ -18,6 +18,7 @@ public class FirstPageFragment extends Fragment {
     private TextView tvAppName, tvWelcomeText, tvSlogan;
     private ImageView imgLogo;
     private Button btnStart, btnSettings;
+    FragmentController controller;
 
 
     public FirstPageFragment() {
@@ -44,12 +45,19 @@ public class FirstPageFragment extends Fragment {
         btnStart.setOnClickListener(new ButtonListener());
     }
 
+    public void setController(FragmentController fragmentController) {
+        this.controller = fragmentController;
+    }
+
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btnStart:
                     // Do something
+                    controller.fragmentOption("distanceFragment");
+                    //testar github
+
                     break;
                 case R.id.btnSettings:
                     // Edit settings UI

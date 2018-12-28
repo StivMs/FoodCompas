@@ -19,6 +19,7 @@ public class DistanceFragment extends Fragment {
     private TextView textView;
     private ImageView imageView;
     private Button btnDistanceNext;
+    FragmentController controller;
 
 
     public DistanceFragment() {
@@ -43,11 +44,17 @@ public class DistanceFragment extends Fragment {
 
     }
 
+    public void setController(FragmentController fragmentController) {
+        this.controller = fragmentController;
+    }
+
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             // Save value from slider
             // Change fragment
+            controller.fragmentOption("foodChoiceFragment");
+
         }
     }
 }

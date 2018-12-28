@@ -26,6 +26,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rockcode.har.HarDataListener;
+import com.rockcode.har.HarMode;
+import com.rockcode.har.HumanActivity;
+import com.rockcode.har.HumanActivityRecognizer;
+import com.rockcode.har.RawData;
+
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +54,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private GeomagneticField geoField;
     private double longitude;
     private double latitude;
-    //testar github
+    HumanActivityRecognizer mHAR;
+    TextView tvNavStatus;
 
 
     public CompassFragment() {
@@ -64,11 +73,32 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         View view = inflater.inflate(R.layout.fragment_compass, container, false);
 
         ivCompass = view.findViewById(R.id.ivCompass);
+        tvNavStatus = view.findViewById(R.id.tvNavStatus);
 
         setOrientationSensor();
         setDeviceLocation();
+        initHAR();
         return view;
     }
+
+
+    private void initHAR(){
+        mHAR = new HumanActivityRecognizer(ma, true, HarMode.CLASSIFY, mHarDataListener);
+        mHAR.start();
+    }
+
+    private HarDataListener mHarDataListener =  new HarDataListener() {
+        @Override
+        public void onHarDataChange(HumanActivity humanActivity) {
+            tvNavStatus.setText("Status: " + humanActivity.mActivity);
+
+        }
+
+        @Override
+        public void onHarRawDataChange(List<RawData> list) {
+
+        }
+    };
 
     private void setOrientationSensor() {
 

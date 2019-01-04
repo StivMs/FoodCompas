@@ -2,7 +2,6 @@ package da345af1.ai2530.mah.se.foodcompass;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
@@ -39,6 +38,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CompassFragment extends Fragment implements SensorEventListener {
+
     private static final String TAG = "Compass Fragment";
     private MainActivity ma;
     private FragmentController controller;
@@ -57,12 +57,21 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     HumanActivityRecognizer mHAR;
     TextView tvNavStatus;
 
+    // private static String chosenFood;
+
+    // private GoogleApiClient mGoogleApiClient;
+    // IGoogleAPIService mService;
+
 
     public CompassFragment() {
     }
 
-    public void setMainActivity(MainActivity mainActivty){
-        this.ma = mainActivty;
+    //public void setFood(String chosenFood) {
+    //  this.chosenFood = chosenFood;
+    //}
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.ma = mainActivity;
     }
 
 
@@ -75,6 +84,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         ivCompass = view.findViewById(R.id.ivCompass);
         tvNavStatus = view.findViewById(R.id.tvNavStatus);
 
+
         setOrientationSensor();
         setDeviceLocation();
         initHAR();
@@ -82,12 +92,12 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     }
 
 
-    private void initHAR(){
+    private void initHAR() {
         mHAR = new HumanActivityRecognizer(ma, true, HarMode.CLASSIFY, mHarDataListener);
         mHAR.start();
     }
 
-    private HarDataListener mHarDataListener =  new HarDataListener() {
+    private HarDataListener mHarDataListener = new HarDataListener() {
         @Override
         public void onHarDataChange(HumanActivity humanActivity) {
             tvNavStatus.setText("Status: " + humanActivity.mActivity);
@@ -132,7 +142,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
                 ActivityCompat.checkSelfPermission(ma.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
             Log.d(TAG, "Permissons OK!");
-        }else {
+        } else {
             ActivityCompat.requestPermissions(ma, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
@@ -154,12 +164,12 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     }
 
 
-    @Override public void onAccuracyChanged (Sensor sensor,int accuracy){ }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
 
-
-
-    private void rotateUsingOrientationSensor (float angle){
+    private void rotateUsingOrientationSensor(float angle) {
         setDeviceLocation(); // supposed to find your devices current location
 
         target.setLatitude(55.60282483143015); // change for testing until google places is implemented
@@ -183,7 +193,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         current = -direction;
     }
 
-    private float normalizeDegree ( float value){
+    private float normalizeDegree(float value) {
         if (value >= 0.0f && value <= 180.0f) {
             return value;
         } else {
@@ -191,7 +201,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         }
     }
 
-    private void toastMessage (String message){
+    private void toastMessage(String message) {
         Toast.makeText(ma, message, Toast.LENGTH_LONG).show();
     }
 
@@ -210,13 +220,16 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) { }
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
 
         @Override
-        public void onProviderEnabled(String provider) { }
+        public void onProviderEnabled(String provider) {
+        }
 
         @Override
-        public void onProviderDisabled(String provider) { }
+        public void onProviderDisabled(String provider) {
+        }
 
     }
 }

@@ -11,6 +11,7 @@ public class FragmentController {
     private DistanceFragment distanceFragment;
     private FirstPageFragment firstPageFragment;
     private FoodChoiceFragment foodChoiceFragment;
+    private NearbyPlaceFragment nearbyPlaceFragment;
 
 
     public FragmentController(MainActivity ma) {
@@ -19,15 +20,26 @@ public class FragmentController {
         initDistance();
         initFirst();
         initFood();
+        initNearbyPlace();
         fragmentOption("firstPageFragment");
         Log.d(TAG, "Starting...");
 
     }
 
+    private void initNearbyPlace() {
+        nearbyPlaceFragment = (NearbyPlaceFragment) ma.getFragment("NearbyPlaceFragment");
+        if (nearbyPlaceFragment == null) {
+            nearbyPlaceFragment = new NearbyPlaceFragment();
+            nearbyPlaceFragment.setMainActivity(ma);
+        }
+        Log.d(TAG, "Setting nearbyPlaceFragment");
+        nearbyPlaceFragment.setController(this);
+    }
+
 
     private void initCompass() {
         compassFragment = (CompassFragment) ma.getFragment("compassFragment");
-        if(compassFragment == null) {
+        if (compassFragment == null) {
             compassFragment = new CompassFragment();
             compassFragment.setMainActivity(ma);
         }
@@ -37,7 +49,7 @@ public class FragmentController {
 
     private void initDistance() {
         distanceFragment = (DistanceFragment) ma.getFragment("distanceFragment");
-        if(distanceFragment == null) {
+        if (distanceFragment == null) {
             distanceFragment = new DistanceFragment();
         }
         Log.d(TAG, "Setting distance fragment");
@@ -46,7 +58,7 @@ public class FragmentController {
 
     private void initFirst() {
         firstPageFragment = (FirstPageFragment) ma.getFragment("firstPageFragment");
-        if(firstPageFragment == null) {
+        if (firstPageFragment == null) {
             firstPageFragment = new FirstPageFragment();
         }
         Log.d(TAG, "Setting first fragment");
@@ -55,7 +67,7 @@ public class FragmentController {
 
     private void initFood() {
         foodChoiceFragment = (FoodChoiceFragment) ma.getFragment("foodChoiceFragment");
-        if(foodChoiceFragment == null) {
+        if (foodChoiceFragment == null) {
             foodChoiceFragment = new FoodChoiceFragment();
         }
         Log.d(TAG, "Setting food fragment");
@@ -78,13 +90,16 @@ public class FragmentController {
             case "foodChoiceFragment":
                 setFragment(foodChoiceFragment, "foodChoiceFragment");
                 break;
+            case "NearbyPlaceFragment":
+                setFragment(nearbyPlaceFragment, "NearbyPlaceFragment");
+                break;
 
         }
     }
 
     public void setFragment(Fragment fragment, String tag) {
         Log.d(TAG, "FRAGMENT SETTING");
-        switch(tag) {
+        switch (tag) {
             case "compassFragment":
                 ma.setFragment(fragment);
                 break;
@@ -96,6 +111,10 @@ public class FragmentController {
                 break;
             case "foodChoiceFragment":
                 ma.setFragment(fragment);
+                break;
+            case "NearbyPlaceFragment":
+                ma.setFragment(fragment);
+                nearbyPlaceFragment.setChosenFood(foodChoiceFragment.chosenFood());
                 break;
 
         }

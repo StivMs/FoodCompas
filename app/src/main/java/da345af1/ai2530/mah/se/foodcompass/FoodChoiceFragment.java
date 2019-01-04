@@ -27,7 +27,10 @@ public class FoodChoiceFragment extends Fragment {
     private RadioButton rbSalad;
     private RadioButton rbPizza;
     private RadioButton rbSushi;
-
+    FragmentController controller;
+    private boolean saladChosen;
+    private boolean pizzaChosen;
+    private boolean sushiChosen;
 
     public FoodChoiceFragment() {
         // Required empty public constructor
@@ -62,6 +65,10 @@ public class FoodChoiceFragment extends Fragment {
         rbSushi.setOnClickListener(new ButtonListener());
     }
 
+    public void setController(FragmentController fragmentController) {
+        this.controller = fragmentController;
+    }
+
 
     private class ButtonListener implements View.OnClickListener {
         @Override
@@ -69,17 +76,34 @@ public class FoodChoiceFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.rbPizza:
                     //Save the option
+                    pizzaChosen = true;
                     break;
                 case R.id.rbSalad:
                     //Save the option
+                    saladChosen = true;
                     break;
                 case R.id.rbSushi:
                     // Save
+                    sushiChosen = true;
                     break;
                 case R.id.btnFoodNext:
                     //Change fragment to the next one
+                    controller.fragmentOption("NearbyPlaceFragment");
                     break;
             }
         }
+    }
+
+    public String chosenFood(){
+       String food = "";
+
+       if(pizzaChosen)
+           food = "pizza";
+       else if(saladChosen)
+           food = "salad";
+       else if(sushiChosen)
+           food = "sushi";
+
+       return food;
     }
 }

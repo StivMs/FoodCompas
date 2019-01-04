@@ -88,7 +88,7 @@ public class FoodChoiceFragment extends Fragment {
                     break;
                 case R.id.btnFoodNext:
                     //Change fragment to the next one
-                    controller.fragmentOption("NearbyPlaceFragment");
+                    controller.fragmentOption("compassFragment");
                     break;
             }
         }

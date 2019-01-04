@@ -1,5 +1,6 @@
 package da345af1.ai2530.mah.se.foodcompass;
 
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,11 +18,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 
 public class GoogleAPI {
 
     JSONObject data = null;
-
+    private CompassFragment compassFragment;
 
     public GoogleAPI() {
     }
@@ -31,6 +34,7 @@ public class GoogleAPI {
         PlacesTask placesTask = new PlacesTask();
         placesTask.execute(sbValue.toString());
     }
+
 
     public StringBuilder sbMethod() {
 
@@ -44,11 +48,15 @@ public class GoogleAPI {
         sb.append("&radius=" + mRadius);
         sb.append("&types=" + "restaurant");
         sb.append("&keyword=" + keyword);
-        sb.append("&key= PUT OUR KEY");
+        sb.append("&key=AIzaSyCPKURdtmOBan_08oXQfuO_OJ1Fb8G-NLY");
 
         Log.d("Map", "api: " + sb.toString());
 
         return sb;
+    }
+
+    public void setCompassFragment(CompassFragment compassFragment) {
+        this.compassFragment = compassFragment;
     }
 
     private class PlacesTask extends AsyncTask<String, Integer, String> {
@@ -117,7 +125,8 @@ public class GoogleAPI {
                 jObject = new JSONObject(jsonData[0]);
 
                 places = placeJson.parse(jObject);
-
+                compassFragment.setLocation(places);
+                Log.d(TAG, "size123 :" + places.size());
             } catch (Exception e) {
                 Log.d("Exception parsing", e.toString());
             }
@@ -140,6 +149,7 @@ public class GoogleAPI {
                 String name = hmPlace.get("place_name");
 
                 Log.d("Map", "place: " + name + " lat: " + String.valueOf(lat) + " lng: " + String.valueOf(lng));
+
 
             }
         }
@@ -179,7 +189,7 @@ public class GoogleAPI {
         /**
          * Parsing the Place JSON object
          */
-        private HashMap<String, String> getPlace(JSONObject jPlace) {
+        public HashMap<String, String> getPlace(JSONObject jPlace) {
 
             HashMap<String, String> place = new HashMap<String, String>();
             String placeName = "-NA-";

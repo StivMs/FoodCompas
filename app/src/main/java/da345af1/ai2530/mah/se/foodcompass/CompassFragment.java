@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +32,9 @@ import com.rockcode.har.HumanActivity;
 import com.rockcode.har.HumanActivityRecognizer;
 import com.rockcode.har.RawData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -87,6 +90,9 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
         setOrientationSensor();
         setDeviceLocation();
+        GoogleAPI googleAPI = new GoogleAPI();
+        googleAPI.setCompassFragment(this);
+        googleAPI.run();
         initHAR();
         return view;
     }
@@ -160,6 +166,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         if (sensor.getType() == 3) {
             ori = event.values[0];
             rotateUsingOrientationSensor(ori);
+            System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
+            Log.d(TAG, "latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
         }
     }
 
@@ -172,8 +180,9 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private void rotateUsingOrientationSensor(float angle) {
         setDeviceLocation(); // supposed to find your devices current location
 
-        target.setLatitude(55.60282483143015); // change for testing until google places is implemented
-        target.setLongitude(13.000476497005366); // change for testing until google places is implemented
+/*        target.setLatitude(55.60282483143015); // change for testing until google places is implemented
+        target.setLongitude(13.000476497005366); // change for testing until google places is implemented*/
+
 
         location.setLatitude(latitude);
         location.setLongitude(longitude);
@@ -207,6 +216,22 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     public void setController(FragmentController controller) {
         this.controller = controller;
+    }
+
+
+
+    public void setLocation(List<HashMap<String,String>> list) {
+        Random random = new Random();
+        int number = 4;
+        HashMap<String, String> hmPlace = list.get(number);
+
+        double lat = Double.parseDouble(hmPlace.get("lat"));
+        double lng = Double.parseDouble(hmPlace.get("lng"));
+
+        Log.d(TAG, "strawberries " + lat + " " + lng);
+
+        target.setLatitude(lat); // change for testing until google places is implemented
+        target.setLongitude(lng); // change for testing until google places is implemented
     }
 
 

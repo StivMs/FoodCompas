@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "645280100098",
+    "firebase_url": "https://foodcompas-a9228.firebaseio.com",
+    "project_id": "foodcompas-a9228",
+    "storage_bucket": "foodcompas-a9228.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645280100098:android:fc8f0dd1a68f01d7",
+        "android_client_info": {
+          "package_name": "da345af1.ai2530.mah.se.foodcompass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645280100098-td0ok4fer8pvp7hctmqc8i3n4m6i11ou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "da345af1.ai2530.mah.se.foodcompass",
+            "certificate_hash": "543ca83a753799763de2814f602f2ef70a476e85"
+          }
+        },
+        {
+          "client_id": "645280100098-hccflmapcfvf2vpkqcg7a32fvqi4dk4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBX1ypDoaeh_broqtn5DmVh0z7QGdGgNI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645280100098-hccflmapcfvf2vpkqcg7a32fvqi4dk4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

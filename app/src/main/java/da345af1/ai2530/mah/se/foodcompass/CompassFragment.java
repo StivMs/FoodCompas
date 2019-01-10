@@ -62,6 +62,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     TextView tvNavStatus;
     private boolean ApiStarted = false;
     private GoogleAPI googleAPI;
+    private String chosenFood;
 
     // private static String chosenFood;
 
@@ -139,6 +140,14 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     }
 
+    public void setChosenFood(String food){
+        this.chosenFood = food;
+    }
+
+    public String getChosenFood(){
+        return chosenFood;
+    }
+
     private void setDeviceLocation() {
 
         Log.d(TAG, "Setting device location...");
@@ -173,7 +182,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         }
         if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
 
         geoField = new GeomagneticField(

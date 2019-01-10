@@ -11,7 +11,6 @@ public class FragmentController {
     private DistanceFragment distanceFragment;
     private FirstPageFragment firstPageFragment;
     private FoodChoiceFragment foodChoiceFragment;
-    private NearbyPlaceFragment nearbyPlaceFragment;
 
 
     public FragmentController(MainActivity ma) {
@@ -20,20 +19,9 @@ public class FragmentController {
         initDistance();
         initFirst();
         initFood();
-        initNearbyPlace();
         fragmentOption("firstPageFragment");
         Log.d(TAG, "Starting...");
 
-    }
-
-    private void initNearbyPlace() {
-        nearbyPlaceFragment = (NearbyPlaceFragment) ma.getFragment("NearbyPlaceFragment");
-        if (nearbyPlaceFragment == null) {
-            nearbyPlaceFragment = new NearbyPlaceFragment();
-            nearbyPlaceFragment.setMainActivity(ma);
-        }
-        Log.d(TAG, "Setting nearbyPlaceFragment");
-        nearbyPlaceFragment.setController(this);
     }
 
 
@@ -90,10 +78,6 @@ public class FragmentController {
             case "foodChoiceFragment":
                 setFragment(foodChoiceFragment, "foodChoiceFragment");
                 break;
-            case "NearbyPlaceFragment":
-                setFragment(nearbyPlaceFragment, "NearbyPlaceFragment");
-                break;
-
         }
     }
 
@@ -102,6 +86,7 @@ public class FragmentController {
         switch (tag) {
             case "compassFragment":
                 ma.setFragment(fragment);
+                compassFragment.setChosenFood(foodChoiceFragment.chosenFood());
                 break;
             case "distanceFragment":
                 ma.setFragment(fragment);
@@ -111,10 +96,6 @@ public class FragmentController {
                 break;
             case "foodChoiceFragment":
                 ma.setFragment(fragment);
-                break;
-            case "NearbyPlaceFragment":
-                ma.setFragment(fragment);
-                nearbyPlaceFragment.setChosenFood(foodChoiceFragment.chosenFood());
                 break;
 
         }

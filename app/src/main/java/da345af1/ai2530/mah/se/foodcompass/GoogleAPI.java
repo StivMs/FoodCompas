@@ -42,7 +42,7 @@ public class GoogleAPI {
         double mLongitude = compassFragment.getLongitude();
         Log.d(TAG, "Location in API set to: Latitude: " + mLatitude + ", Longitude: " + mLongitude );
         int mRadius = 500;
-        String keyword = "sushi";
+        String keyword = compassFragment.getChosenFood();
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         sb.append("location=" + mLatitude + "," + mLongitude);

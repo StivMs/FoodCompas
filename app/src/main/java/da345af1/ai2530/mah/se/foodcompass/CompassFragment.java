@@ -59,6 +59,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private double latitude;
     HumanActivityRecognizer mHAR;
     TextView tvNavStatus;
+    private boolean ApiStarted = false;
+    private GoogleAPI googleAPI;
 
     // private static String chosenFood;
 
@@ -90,10 +92,10 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
         setOrientationSensor();
         setDeviceLocation();
-        GoogleAPI googleAPI = new GoogleAPI();
+        googleAPI = new GoogleAPI();
         googleAPI.setCompassFragment(this);
-        googleAPI.run();
-        initHAR();
+        Thread thread = new StartAPIThread();
+        thread.start();
         return view;
     }
 
@@ -234,6 +236,14 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         target.setLongitude(lng); // change for testing until google places is implemented
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
 
     private class MyLocationListener implements LocationListener {
         @Override
@@ -256,5 +266,17 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         public void onProviderDisabled(String provider) {
         }
 
+    }
+
+    private class StartAPIThread extends Thread {
+        public void run(){
+            while(!ApiStarted){
+                if(latitude !=0.0 && longitude !=0.0){
+                    googleAPI.run();
+                    initHAR();
+                    ApiStarted=true;
+                }
+            }
+        }
     }
 }

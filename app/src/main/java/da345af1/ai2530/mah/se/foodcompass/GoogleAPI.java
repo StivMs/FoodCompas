@@ -38,8 +38,9 @@ public class GoogleAPI {
 
     public StringBuilder sbMethod() {
 
-        double mLatitude = 55.605750;
-        double mLongitude = 13.000068;
+        double mLatitude = compassFragment.getLatitude();
+        double mLongitude = compassFragment.getLongitude();
+        Log.d(TAG, "Location in API set to: Latitude: " + mLatitude + ", Longitude: " + mLongitude );
         int mRadius = 500;
         String keyword = "sushi";
 

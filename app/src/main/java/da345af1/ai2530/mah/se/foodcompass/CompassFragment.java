@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,17 +142,38 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private void setDeviceLocation() {
 
         Log.d(TAG, "Setting device location...");
+        LocationManager locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+            }
 
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
-        locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new MyLocationListener();
-        if (ActivityCompat.checkSelfPermission(ma.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(ma.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-            Log.d(TAG, "Permissons OK!");
-        } else {
-            ActivityCompat.requestPermissions(ma, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions( ma, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION },
+                    1);
+
+        }
+        if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
 
         geoField = new GeomagneticField(
@@ -181,10 +203,6 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     private void rotateUsingOrientationSensor(float angle) {
         setDeviceLocation(); // supposed to find your devices current location
-
-/*        target.setLatitude(55.60282483143015); // change for testing until google places is implemented
-        target.setLongitude(13.000476497005366); // change for testing until google places is implemented*/
-
 
         location.setLatitude(latitude);
         location.setLongitude(longitude);
@@ -242,30 +260,6 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     public double getLongitude() {
         return longitude;
-    }
-
-
-    private class MyLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Log.d(TAG, "MyLocationListener: " + latitude + ", " + longitude);
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
     }
 
     private class StartAPIThread extends Thread {

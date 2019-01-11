@@ -120,7 +120,7 @@
         app:layout_constraintVertical_bias="0.42">
 
         <RadioButton
-            android:id="@+id/rbSalad"
+            android:id="@+id/rbPizza"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -132,7 +132,7 @@
             app:layout_constraintTop_toBottomOf="@+id/rbPizza" />
 
         <RadioButton
-            android:id="@+id/rbPizza"
+            android:id="@+id/rbSalad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -153,7 +153,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.368"
             app:layout_constraintStart_toEndOf="@+id/ivSushi"
-            app:layout_constraintTop_toBottomOf="@+id/rbSalad" />
+            app:layout_constraintTop_toBottomOf="@+id/rbPizza" />
     </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>

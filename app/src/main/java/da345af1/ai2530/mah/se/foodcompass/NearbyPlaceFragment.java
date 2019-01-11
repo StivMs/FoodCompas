@@ -65,6 +65,7 @@ public class NearbyPlaceFragment extends Fragment implements OnMapReadyCallback 
     private FragmentController controller;
 
     private String chosenFood;
+    private Float distance;
 
 
     IGoogleAPIService mService;
@@ -265,7 +266,7 @@ public class NearbyPlaceFragment extends Fragment implements OnMapReadyCallback 
     private String getUrl(double latitude, double longitude, String placeType) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location=" + latitude + "," + longitude);
-        googlePlacesUrl.append("&radius=" + 10000);
+        googlePlacesUrl.append("&radius=" + getDistance());
         // googlePlacesUrl.append("&keyword=" + getChosenFood());
         googlePlacesUrl.append("&type=" + placeType);
         googlePlacesUrl.append("&key=" + getResources().getString(R.string.google_maps_key));
@@ -279,6 +280,14 @@ public class NearbyPlaceFragment extends Fragment implements OnMapReadyCallback 
 
     public void setChosenFood(String chosenFood) {
         this.chosenFood = chosenFood;
+    }
+
+    public Float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Float distance) {
+        this.distance = distance;
     }
 
     @Override

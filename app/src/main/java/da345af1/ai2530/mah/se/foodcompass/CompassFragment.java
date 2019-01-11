@@ -63,6 +63,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private boolean ApiStarted = false;
     private GoogleAPI googleAPI;
     private String chosenFood;
+    private float distance;
 
     // private static String chosenFood;
 
@@ -148,6 +149,14 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         return chosenFood;
     }
 
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
     private void setDeviceLocation() {
 
         Log.d(TAG, "Setting device location...");
@@ -199,7 +208,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         if (sensor.getType() == 3) {
             ori = event.values[0];
             rotateUsingOrientationSensor(ori);
-            System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
+           // System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
             Log.d(TAG, "latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
         }
     }
@@ -270,6 +279,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     public double getLongitude() {
         return longitude;
     }
+
+
 
     private class StartAPIThread extends Thread {
         public void run(){

@@ -55,7 +55,7 @@ public class FoodChoiceFragment extends Fragment {
         ivSalad = view.findViewById(R.id.ivSalad);
         ivSushi = view.findViewById(R.id.ivSushi);
         btnFoodNext = view.findViewById(R.id.btnFoodNext);
-        rbSalad = view.findViewById(R.id.rbSalad);
+        rbSalad = view.findViewById(R.id.rbPizza);
         rbPizza = view.findViewById(R.id.rbPizza);
         rbSushi = view.findViewById(R.id.rbSushi);
 

@@ -1,15 +1,20 @@
 package da345af1.ai2530.mah.se.foodcompass;
 
 
+import android.arch.core.util.Function;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.ramotion.fluidslider.FluidSlider;
+import com.warkiz.widget.IndicatorSeekBar;
 
 
 /**
@@ -20,7 +25,7 @@ public class DistanceFragment extends Fragment {
     private ImageView imageView;
     private Button btnDistanceNext;
     FragmentController controller;
-
+    IndicatorSeekBar distanceSlider;
 
     public DistanceFragment() {
         // Required empty public constructor
@@ -41,7 +46,14 @@ public class DistanceFragment extends Fragment {
         imageView = view.findViewById( R.id.imageView );
         btnDistanceNext = view.findViewById( R.id.btnDistanceNext );
         btnDistanceNext.setOnClickListener(new ButtonListener() );
+        distanceSlider = view.findViewById(R.id.distSlider);
 
+
+    }
+
+    public float getDistance(){
+        float distance =  distanceSlider.getProgressFloat();
+        return distance;
     }
 
     public void setController(FragmentController fragmentController) {
@@ -53,8 +65,10 @@ public class DistanceFragment extends Fragment {
         public void onClick(View view) {
             // Save value from slider
             // Change fragment
-            controller.fragmentOption("foodChoiceFragment");
 
+            controller.fragmentOption("foodChoiceFragment");
+            getDistance();
+            Log.d("", "onClick: " + getDistance());
         }
     }
 }

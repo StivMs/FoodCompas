@@ -87,6 +87,7 @@ public class FragmentController {
             case "compassFragment":
                 ma.setFragment(fragment);
                 compassFragment.setChosenFood(foodChoiceFragment.chosenFood());
+                compassFragment.setDistance(distanceFragment.getDistance());
                 break;
             case "distanceFragment":
                 ma.setFragment(fragment);

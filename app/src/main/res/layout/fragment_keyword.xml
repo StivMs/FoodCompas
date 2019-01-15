@@ -8,6 +8,15 @@
     android:padding="20dp"
     tools:context=".KeywordFragment">
 
+    <TextView
+        android:id="@+id/textViewSelected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:text="@string/selected"
+        android:textSize="18sp" />
+
     <ListView
         android:id="@+id/listOptions"
         android:layout_width="match_parent"
@@ -15,10 +24,10 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/buttonSelect"
+        android:id="@+id/buttonContinue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:text="@string/select" />
+        android:layout_weight="5"
+        android:text="Continue" />
 
 </LinearLayout>

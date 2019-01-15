@@ -1,7 +1,6 @@
 package da345af1.ai2530.mah.se.foodcompass;
 
 
-import android.arch.core.util.Function;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.ramotion.fluidslider.FluidSlider;
 import com.warkiz.widget.IndicatorSeekBar;
 
 
@@ -21,11 +18,14 @@ import com.warkiz.widget.IndicatorSeekBar;
  * A simple {@link Fragment} subclass.
  */
 public class DistanceFragment extends Fragment {
+    private static final String TAG = "DistanceFragment";
     private TextView textView;
     private ImageView imageView;
     private Button btnDistanceNext;
     FragmentController controller;
-    IndicatorSeekBar distanceSlider;
+    private IndicatorSeekBar slider;
+    private int radius;
+
 
     public DistanceFragment() {
         // Required empty public constructor
@@ -42,19 +42,16 @@ public class DistanceFragment extends Fragment {
     }
 
     private void initComponent(View view) {
-        textView = view.findViewById( R.id.textView );
-        imageView = view.findViewById( R.id.imageView );
-        btnDistanceNext = view.findViewById( R.id.btnDistanceNext );
-        btnDistanceNext.setOnClickListener(new ButtonListener() );
-        distanceSlider = view.findViewById(R.id.distSlider);
-
+        slider = view.findViewById(R.id.distSlider);
+        slider.setMin(1);
+        slider.setMax(2500);
+        textView = view.findViewById(R.id.textViewSelected);
+        imageView = view.findViewById(R.id.imageView);
+        btnDistanceNext = view.findViewById(R.id.btnDistanceNext);
+        btnDistanceNext.setOnClickListener(new ButtonListener());
 
     }
 
-    public float getDistance(){
-        float distance =  distanceSlider.getProgressFloat();
-        return distance;
-    }
 
     public void setController(FragmentController fragmentController) {
         this.controller = fragmentController;
@@ -63,12 +60,13 @@ public class DistanceFragment extends Fragment {
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            // Save value from slider
-            // Change fragment
-
+            radius = slider.getProgress();
+            Log.d(TAG, "onClick: IS THIS RADIUS LEL " + radius);
             controller.fragmentOption("foodChoiceFragment");
-            getDistance();
-            Log.d("", "onClick: " + getDistance());
         }
+    }
+
+    public int getRadius() {
+        return this.radius;
     }
 }

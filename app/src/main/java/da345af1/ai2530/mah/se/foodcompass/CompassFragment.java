@@ -23,10 +23,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.rockcode.har.HarDataListener;
 import com.rockcode.har.HarMode;
 import com.rockcode.har.HumanActivity;
@@ -58,25 +58,14 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private GeomagneticField geoField;
     private double longitude;
     private double latitude;
+    private long lastUpdateTime;
     HumanActivityRecognizer mHAR;
     TextView tvNavStatus;
-    private boolean ApiStarted = false;
-    private GoogleAPI googleAPI;
-    private String chosenFood;
-    private float distance;
-
-    // private static String chosenFood;
-
-    // private GoogleApiClient mGoogleApiClient;
-    // IGoogleAPIService mService;
 
 
     public CompassFragment() {
     }
 
-    //public void setFood(String chosenFood) {
-    //  this.chosenFood = chosenFood;
-    //}
 
     public void setMainActivity(MainActivity mainActivity) {
         this.ma = mainActivity;
@@ -95,10 +84,6 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
         setOrientationSensor();
         setDeviceLocation();
-        googleAPI = new GoogleAPI();
-        googleAPI.setCompassFragment(this);
-        Thread thread = new StartAPIThread();
-        thread.start();
         return view;
     }
 
@@ -106,6 +91,11 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private void initHAR() {
         mHAR = new HumanActivityRecognizer(ma, true, HarMode.CLASSIFY, mHarDataListener);
         mHAR.start();
+    }
+
+    public void setTarget(LatLng target) {
+        this.target.setLatitude(target.latitude);
+        this.target.setLongitude(target.longitude);
     }
 
     private HarDataListener mHarDataListener = new HarDataListener() {
@@ -121,7 +111,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         }
     };
 
-    private void setOrientationSensor() {
+    void setOrientationSensor() {
 
         Log.d(TAG, "setting Sensors...");
         sensorManager = (SensorManager) ma.getSystemService(Context.SENSOR_SERVICE);
@@ -141,24 +131,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     }
 
-    public void setChosenFood(String food){
-        this.chosenFood = food;
-    }
-
-    public String getChosenFood(){
-        return chosenFood;
-    }
-
-    public float getDistance() {
-        return distance;
-    }
-
-    public void setDistance(float distance) {
-        this.distance = distance;
-    }
-
-    private void setDeviceLocation() {
-
+    void setDeviceLocation() {
         Log.d(TAG, "Setting device location...");
         LocationManager locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
@@ -166,6 +139,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+                Log.d(TAG, "onLocationChanged: " + longitude + " " + latitude);
             }
 
             @Override
@@ -185,7 +159,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         };
         if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( ma, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION },
+            ActivityCompat.requestPermissions(ma, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
 
         }
@@ -208,7 +182,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         if (sensor.getType() == 3) {
             ori = event.values[0];
             rotateUsingOrientationSensor(ori);
-           // System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
+            // System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
             Log.d(TAG, "latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
         }
     }
@@ -220,24 +194,28 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
 
     private void rotateUsingOrientationSensor(float angle) {
+
         setDeviceLocation(); // supposed to find your devices current location
 
         location.setLatitude(latitude);
         location.setLongitude(longitude);
 
-        float degree = Math.round(angle);
-        degree += geoField.getDeclination(); //adjusting compass between true north/magnetic north
-        float bearing = location.bearingTo(target);
+        if (System.currentTimeMillis() - lastUpdateTime > 250) {
+            float degree = Math.round(angle);
+            degree += geoField.getDeclination(); //adjusting compass between true north/magnetic north
+            float bearing = location.bearingTo(target);
 
-        float direction = bearing - (bearing - degree) * -1;
-        direction = normalizeDegree(direction);
+            float direction = bearing - (bearing - degree) * -1;
+            direction = normalizeDegree(direction);
 
-        RotateAnimation ra = new RotateAnimation(current, -direction, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            RotateAnimation ra = new RotateAnimation(current, direction, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-        ivCompass.startAnimation(ra);
-        current = -direction;
+            ra.setDuration(250);
+            ra.setFillAfter(true);
+            ivCompass.startAnimation(ra);
+            current = direction;
+            lastUpdateTime = System.currentTimeMillis();
+        }
     }
 
     private float normalizeDegree(float value) {
@@ -257,8 +235,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     }
 
 
-
-    public void setLocation(List<HashMap<String,String>> list) {
+    public void setLocation(List<HashMap<String, String>> list) {
         Random random = new Random();
         int number = 4;
         HashMap<String, String> hmPlace = list.get(number);
@@ -272,25 +249,4 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         target.setLongitude(lng); // change for testing until google places is implemented
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-
-
-    private class StartAPIThread extends Thread {
-        public void run(){
-            while(!ApiStarted){
-                if(latitude !=0.0 && longitude !=0.0){
-                    googleAPI.run();
-                    initHAR();
-                    ApiStarted=true;
-                }
-            }
-        }
-    }
 }

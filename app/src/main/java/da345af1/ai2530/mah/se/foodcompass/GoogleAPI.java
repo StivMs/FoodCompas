@@ -1,7 +1,9 @@
 package da345af1.ai2530.mah.se.foodcompass;
 
-import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -25,6 +27,29 @@ public class GoogleAPI {
 
     JSONObject data = null;
     private CompassFragment compassFragment;
+    private KeywordFragment keywordFragment;
+    private String keyword;
+
+    private double latitude, longitude;
+
+    private int radius;
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public GoogleAPI() {
     }
@@ -35,14 +60,19 @@ public class GoogleAPI {
         placesTask.execute(sbValue.toString());
     }
 
+    public void setKeyword(String keyword){
+        this.keyword = keyword;
+    }
+
 
     public StringBuilder sbMethod() {
 
-        double mLatitude = compassFragment.getLatitude();
-        double mLongitude = compassFragment.getLongitude();
-        Log.d(TAG, "Location in API set to: Latitude: " + mLatitude + ", Longitude: " + mLongitude );
-        float mRadius = compassFragment.getDistance();
-        String keyword = compassFragment.getChosenFood();
+        double mLatitude = latitude;
+        double mLongitude = longitude;
+        String keyword = "";
+        Log.d(TAG, "Location in API set to: Latitude: " + mLatitude + ", Longitude: " + mLongitude);
+        int mRadius = radius;
+
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         sb.append("location=" + mLatitude + "," + mLongitude);
@@ -56,8 +86,11 @@ public class GoogleAPI {
         return sb;
     }
 
-    public void setCompassFragment(CompassFragment compassFragment) {
-        this.compassFragment = compassFragment;
+    public void setFragment(Fragment fragment) {
+        if (fragment instanceof CompassFragment)
+            this.compassFragment = (CompassFragment) fragment;
+        else if (fragment instanceof KeywordFragment)
+            this.keywordFragment = (KeywordFragment) fragment;
     }
 
     private class PlacesTask extends AsyncTask<String, Integer, String> {
@@ -126,8 +159,20 @@ public class GoogleAPI {
                 jObject = new JSONObject(jsonData[0]);
 
                 places = placeJson.parse(jObject);
-                compassFragment.setLocation(places);
-                Log.d(TAG, "size123 :" + places.size());
+                final List<HashMap<String, String>> listMap = places;
+                if (compassFragment != null) {
+                    compassFragment.setLocation(places);
+                    Log.d(TAG, "size123 :" + places.size());
+                }
+
+                if (keywordFragment != null) {
+                    Log.d(TAG, "doInBackground: KEYWORD EXIST=");
+                    final Handler UIhandler = new Handler(Looper.getMainLooper());
+                    UIhandler.post(() -> {
+                        keywordFragment.setKeywordsInList(listMap);
+                    });
+                    Log.d(TAG, "size of list: " + places.size());
+                }
             } catch (Exception e) {
                 Log.d("Exception parsing", e.toString());
             }

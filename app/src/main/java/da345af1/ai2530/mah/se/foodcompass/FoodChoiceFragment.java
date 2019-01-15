@@ -31,6 +31,7 @@ public class FoodChoiceFragment extends Fragment {
     private boolean saladChosen;
     private boolean pizzaChosen;
     private boolean sushiChosen;
+    private String food;
 
     public FoodChoiceFragment() {
         // Required empty public constructor
@@ -87,23 +88,22 @@ public class FoodChoiceFragment extends Fragment {
                     sushiChosen = true;
                     break;
                 case R.id.btnFoodNext:
-                    //Change fragment to the next one
-                    controller.fragmentOption("compassFragment");
+                    controller.fragmentOption("keywordFragment");
                     break;
             }
         }
     }
 
-    public String chosenFood(){
-       String food = "";
+    public String chosenFood() {
+        food = "";
 
-       if(pizzaChosen)
-           food = "pizza";
-       else if(saladChosen)
-           food = "salad";
-       else if(sushiChosen)
-           food = "sushi";
+        if (pizzaChosen)
+            food = "pizza";
+        else if (saladChosen)
+            food = "salad";
+        else if (sushiChosen)
+            food = "sushi";
 
-       return food;
+        return food;
     }
 }

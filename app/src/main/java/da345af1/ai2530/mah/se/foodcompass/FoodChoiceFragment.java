@@ -3,6 +3,7 @@ package da345af1.ai2530.mah.se.foodcompass;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class FoodChoiceFragment extends Fragment {
+
+    private static final String TAG = "FoodChoiceFragment";
     private TextView tvFoodQuestion;
     private TextView tvPizza;
     private TextView tvSalad;
@@ -28,9 +31,7 @@ public class FoodChoiceFragment extends Fragment {
     private RadioButton rbPizza;
     private RadioButton rbSushi;
     FragmentController controller;
-    private boolean saladChosen;
-    private boolean pizzaChosen;
-    private boolean sushiChosen;
+
     private String food;
 
     public FoodChoiceFragment() {
@@ -56,14 +57,14 @@ public class FoodChoiceFragment extends Fragment {
         ivSalad = view.findViewById(R.id.ivSalad);
         ivSushi = view.findViewById(R.id.ivSushi);
         btnFoodNext = view.findViewById(R.id.btnFoodNext);
-        rbSalad = view.findViewById(R.id.rbPizza);
+        rbSalad = view.findViewById(R.id.rbSalad);
         rbPizza = view.findViewById(R.id.rbPizza);
         rbSushi = view.findViewById(R.id.rbSushi);
 
         btnFoodNext.setOnClickListener(new ButtonListener());
-        rbSalad.setOnClickListener(new ButtonListener());
-        rbPizza.setOnClickListener(new ButtonListener());
-        rbSushi.setOnClickListener(new ButtonListener());
+        //rbSalad.setOnClickListener(new ButtonListener());
+        // rbPizza.setOnClickListener(new ButtonListener());
+        // rbSushi.setOnClickListener(new ButtonListener());
     }
 
     public void setController(FragmentController fragmentController) {
@@ -74,35 +75,24 @@ public class FoodChoiceFragment extends Fragment {
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.rbPizza:
-                    //Save the option
-                    pizzaChosen = true;
-                    break;
-                case R.id.rbSalad:
-                    //Save the option
-                    saladChosen = true;
-                    break;
-                case R.id.rbSushi:
-                    // Save
-                    sushiChosen = true;
-                    break;
-                case R.id.btnFoodNext:
-                    controller.fragmentOption("keywordFragment");
-                    break;
-            }
+            if (rbPizza.isChecked())
+                food = "pizza";
+            else if (rbSalad.isChecked())
+                food = "salad";
+            else if (rbSushi.isChecked())
+                food = "sushi";
+            else
+                food = "";
+
+
+            controller.fragmentOption("keywordFragment");
+
         }
     }
 
-    public String chosenFood() {
-        food = "";
 
-        if (pizzaChosen)
-            food = "pizza";
-        else if (saladChosen)
-            food = "salad";
-        else if (sushiChosen)
-            food = "sushi";
+    public String chosenFood() {
+
 
         return food;
     }

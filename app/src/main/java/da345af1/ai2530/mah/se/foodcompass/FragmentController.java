@@ -24,7 +24,6 @@ public class FragmentController {
 
     private double longitude, latitude;
     private boolean ApiStarted = false;
-    private boolean noLocationFound = true;
     private int radius;
     private boolean locationSet = false;
 
@@ -155,7 +154,6 @@ public class FragmentController {
                     longitude = location.getLongitude();
                     latitude = location.getLatitude();
                     Log.d(TAG, "onLocationChanged: " + longitude + " " + latitude);
-                    noLocationFound = false;
                     fragmentOption("firstPageFragment");
                     locationSet = true;
                 }

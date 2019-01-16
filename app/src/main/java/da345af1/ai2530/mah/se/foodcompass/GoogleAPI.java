@@ -60,7 +60,7 @@ public class GoogleAPI {
         placesTask.execute(sbValue.toString());
     }
 
-    public void setKeyword(String keyword){
+    public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
@@ -69,7 +69,7 @@ public class GoogleAPI {
 
         double mLatitude = latitude;
         double mLongitude = longitude;
-        String keyword = "";
+        String keyword = this.keyword;
         Log.d(TAG, "Location in API set to: Latitude: " + mLatitude + ", Longitude: " + mLongitude);
         int mRadius = radius;
 
@@ -160,10 +160,6 @@ public class GoogleAPI {
 
                 places = placeJson.parse(jObject);
                 final List<HashMap<String, String>> listMap = places;
-                if (compassFragment != null) {
-                    compassFragment.setLocation(places);
-                    Log.d(TAG, "size123 :" + places.size());
-                }
 
                 if (keywordFragment != null) {
                     Log.d(TAG, "doInBackground: KEYWORD EXIST=");

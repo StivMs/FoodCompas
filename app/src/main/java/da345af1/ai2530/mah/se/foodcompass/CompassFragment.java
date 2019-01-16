@@ -33,9 +33,7 @@ import com.rockcode.har.HumanActivity;
 import com.rockcode.har.HumanActivityRecognizer;
 import com.rockcode.har.RawData;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -61,6 +59,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     private long lastUpdateTime;
     HumanActivityRecognizer mHAR;
     TextView tvNavStatus;
+    LocationListener locationListener;
 
 
     public CompassFragment() {
@@ -86,7 +85,6 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         setDeviceLocation();
         return view;
     }
-
 
     private void initHAR() {
         mHAR = new HumanActivityRecognizer(ma, true, HarMode.CLASSIFY, mHarDataListener);
@@ -133,8 +131,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     void setDeviceLocation() {
         Log.d(TAG, "Setting device location...");
-        LocationManager locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+        locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
@@ -234,19 +232,5 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         this.controller = controller;
     }
 
-
-    public void setLocation(List<HashMap<String, String>> list) {
-        Random random = new Random();
-        int number = 4;
-        HashMap<String, String> hmPlace = list.get(number);
-
-        double lat = Double.parseDouble(hmPlace.get("lat"));
-        double lng = Double.parseDouble(hmPlace.get("lng"));
-
-        Log.d(TAG, "strawberries " + lat + " " + lng);
-
-        target.setLatitude(lat); // change for testing until google places is implemented
-        target.setLongitude(lng); // change for testing until google places is implemented
-    }
 
 }

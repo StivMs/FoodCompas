@@ -3,7 +3,6 @@ package da345af1.ai2530.mah.se.foodcompass;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +60,12 @@ public class FoodChoiceFragment extends Fragment {
         rbPizza = view.findViewById(R.id.rbPizza);
         rbSushi = view.findViewById(R.id.rbSushi);
 
+        tvPizza.setOnClickListener(new ButtonListener());
+        ivPizza.setOnClickListener(new ButtonListener());
+        ivSalad.setOnClickListener(new ButtonListener());
+        tvSalad.setOnClickListener(new ButtonListener());
+        ivSushi.setOnClickListener(new ButtonListener());
+        tvSushi.setOnClickListener(new ButtonListener());
         btnFoodNext.setOnClickListener(new ButtonListener());
         //rbSalad.setOnClickListener(new ButtonListener());
         // rbPizza.setOnClickListener(new ButtonListener());
@@ -75,24 +80,35 @@ public class FoodChoiceFragment extends Fragment {
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            if (rbPizza.isChecked())
-                food = "pizza";
-            else if (rbSalad.isChecked())
-                food = "salad";
-            else if (rbSushi.isChecked())
-                food = "sushi";
-            else
-                food = "";
+            if (ivPizza.isPressed() || tvPizza.isPressed()) {
+                rbPizza.setChecked(true);
+            } else if (ivSalad.isPressed() || tvSalad.isPressed()) {
+                rbSalad.setChecked(true);
 
+            } else if (ivSushi.isPressed() || tvSushi.isPressed()) {
+                rbSushi.setChecked(true);
+            } else {
+                if (!(rbPizza.isChecked() || rbSushi.isChecked() || rbSalad.isChecked())) {
+                    controller.initDialog("Please choose a category!");
 
-            controller.fragmentOption("keywordFragment");
+                } else {
+                    if (rbPizza.isChecked())
+                        food = "pizza";
+                    else if (rbSalad.isChecked())
+                        food = "salad";
+                    else if (rbSushi.isChecked())
+                        food = "sushi";
+
+                    controller.fragmentOption("keywordFragment");
+                }
+            }
+
 
         }
     }
 
 
     public String chosenFood() {
-
 
         return food;
     }

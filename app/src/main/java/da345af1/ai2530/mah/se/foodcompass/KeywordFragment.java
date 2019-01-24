@@ -36,6 +36,7 @@ public class KeywordFragment extends Fragment {
 
     private LatLng target;
     private LatLng[] targets;
+    FoodChoiceFragment foodChoiceFragment;
 
 
     @Override
@@ -106,7 +107,12 @@ public class KeywordFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            controller.fragmentOption("compassFragment");
+            if(selectedItem!=null){
+                controller.fragmentOption("compassFragment");
+            }else{
+                controller.initDialog("Please pick a restaurant from the list!");
+            }
+
         }
     }
 

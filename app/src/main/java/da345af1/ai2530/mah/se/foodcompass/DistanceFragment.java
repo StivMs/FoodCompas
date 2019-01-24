@@ -43,8 +43,9 @@ public class DistanceFragment extends Fragment {
 
     private void initComponent(View view) {
         slider = view.findViewById(R.id.distSlider);
-        slider.setMin(1);
+        slider.setMin(500);
         slider.setMax(2500);
+        slider.setProgress(1500);
         textView = view.findViewById(R.id.textViewSelected);
         imageView = view.findViewById(R.id.imageView);
         btnDistanceNext = view.findViewById(R.id.btnDistanceNext);

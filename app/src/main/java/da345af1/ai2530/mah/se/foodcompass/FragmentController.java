@@ -3,6 +3,7 @@ package da345af1.ai2530.mah.se.foodcompass;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,7 +12,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+
+//TODO Fixa I regret knappen och finish knappen.
+// TODO Fixa settingsknappen eller ta bort den?
 
 public class FragmentController {
     private static final String TAG = "FragmentController";
@@ -21,6 +26,8 @@ public class FragmentController {
     private FirstPageFragment firstPageFragment;
     private FoodChoiceFragment foodChoiceFragment;
     private KeywordFragment keywordFragment;
+    private ArrivedFragment arrivedFragment;
+    private LoadingFragment loadingFragment;
 
     private double longitude, latitude;
     private boolean ApiStarted = false;
@@ -36,9 +43,11 @@ public class FragmentController {
         initFirst();
         initFood();
         initKeyword();
+        initArrived();
+        initLoading();
         Log.d(TAG, "Starting...");
+        fragmentOption("loadingFragment");
         setLocation();
-
     }
 
     private void initKeyword() {
@@ -90,6 +99,22 @@ public class FragmentController {
         foodChoiceFragment.setController(this);
     }
 
+    private void initArrived(){
+        arrivedFragment = (ArrivedFragment)ma.getFragment("arrivedFragment");
+        if(arrivedFragment == null){
+            arrivedFragment = new ArrivedFragment();
+        }
+        arrivedFragment.setController(this);
+    }
+
+    private void initLoading(){
+        loadingFragment = (LoadingFragment)ma.getFragment("loadingFragment");
+        if(loadingFragment == null){
+            loadingFragment = new LoadingFragment();
+        }
+        loadingFragment.setController(this);
+    }
+
 
     public void fragmentOption(String tag) {
         Log.d(TAG, "FRAGMENT OPTION SETTING");
@@ -109,6 +134,11 @@ public class FragmentController {
             case "keywordFragment":
                 setFragment(keywordFragment, "keywordFragment");
                 break;
+            case "arrivedFragment":
+                setFragment(arrivedFragment,"arrivedFragment" );
+                break;
+            case "loadingFragment":
+                setFragment(loadingFragment, "loadingFragment");
         }
 
     }
@@ -140,7 +170,12 @@ public class FragmentController {
                 thread.start();
                 ma.setFragment(fragment);
                 break;
-
+            case "arrivedFragment":
+                ma.setFragment(fragment);
+                break;
+            case "loadingFragment":
+                ma.setFragment(fragment);
+                break;
         }
     }
 
@@ -156,6 +191,8 @@ public class FragmentController {
                     Log.d(TAG, "onLocationChanged: " + longitude + " " + latitude);
                     fragmentOption("firstPageFragment");
                     locationSet = true;
+                    compassFragment.setLocation(latitude, longitude);
+                    //TODO avregistrera lyssnare
                 }
             }
 
@@ -175,6 +212,8 @@ public class FragmentController {
             }
         };
 
+
+
         if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ma, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -186,6 +225,19 @@ public class FragmentController {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
 
+    }
+    public void initDialog(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(ma)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Warning!")
+                .setMessage(text)
+                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
     }
 
     private class StartAPIThread extends Thread {

@@ -47,5 +47,7 @@ dependencies {
     implementation project(':HARLib-release-v1.0')
     implementation project(':WekaAndroid-release-v3.7.1')
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+    implementation 'com.github.prabhat1707:EasyWayLocation:1.0'
+
 
 }

@@ -22,10 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easywaylocation.EasyWayLocation;
+import com.example.easywaylocation.Listener;
 import com.google.android.gms.maps.model.LatLng;
 import com.rockcode.har.HarDataListener;
 import com.rockcode.har.HarMode;
@@ -33,13 +36,14 @@ import com.rockcode.har.HumanActivity;
 import com.rockcode.har.HumanActivityRecognizer;
 import com.rockcode.har.RawData;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CompassFragment extends Fragment implements SensorEventListener {
+public class CompassFragment extends Fragment implements SensorEventListener, Listener {
 
     private static final String TAG = "Compass Fragment";
     private MainActivity ma;
@@ -60,6 +64,9 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     HumanActivityRecognizer mHAR;
     TextView tvNavStatus;
     LocationListener locationListener;
+    EasyWayLocation easyWayLocation;
+    private Double lati, longi;
+    Button btnRefresh;
 
 
     public CompassFragment() {
@@ -79,11 +86,17 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
         ivCompass = view.findViewById(R.id.ivCompass);
         tvNavStatus = view.findViewById(R.id.tvNavStatus);
-
+        easyWayLocation = new EasyWayLocation(getContext());
+        easyWayLocation.setListener(this);
+        btnRefresh = view.findViewById(R.id.btnRegret);
+        btnRefresh.setOnClickListener(new ButtonListener());
 
         setOrientationSensor();
         setDeviceLocation();
+        locationOn();
+        onPositionChanged();
         return view;
+
     }
 
     private void initHAR() {
@@ -130,14 +143,19 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     }
 
     void setDeviceLocation() {
-        Log.d(TAG, "Setting device location...");
+        Log.d(TAG, "Setting device location.teeest..");
+
         locationManager = (LocationManager) ma.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
-                Log.d(TAG, "onLocationChanged: " + longitude + " " + latitude);
+                Log.d(TAG, "onLocationChanged: " + latitude + " " + longitude);
+                locationOn();
+                onPositionChanged();
+
+
             }
 
             @Override
@@ -163,7 +181,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         }
         if (ContextCompat.checkSelfPermission(ma, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+           // onPositionChanged();
         }
 
         geoField = new GeomagneticField(
@@ -181,7 +200,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
             ori = event.values[0];
             rotateUsingOrientationSensor(ori);
             // System.out.println("latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
-            Log.d(TAG, "latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
+            Log.d(TAG, "Restaurang position latitude: " + target.getLatitude() + " longitude: " + target.getLongitude());
+           //  onPositionChanged();
         }
     }
 
@@ -193,7 +213,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     private void rotateUsingOrientationSensor(float angle) {
 
-        setDeviceLocation(); // supposed to find your devices current location
+        //setDeviceLocation(); // supposed to find your devices current location
 
         location.setLatitude(latitude);
         location.setLongitude(longitude);
@@ -226,6 +246,7 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     private void toastMessage(String message) {
         Toast.makeText(ma, message, Toast.LENGTH_LONG).show();
+        
     }
 
     public void setController(FragmentController controller) {
@@ -233,4 +254,87 @@ public class CompassFragment extends Fragment implements SensorEventListener {
     }
 
 
+    @Override
+    public void locationOn() {
+        easyWayLocation.beginUpdates();
+        lati = easyWayLocation.getLatitude();
+        longi = easyWayLocation.getLongitude();
+
+    }
+
+
+
+    public double CalculationByDistance(EasyWayLocation.Point StartP, EasyWayLocation.Point EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + meter + "   M  " + kmInDec
+                + " Meter   " + meterInDec);
+
+        return Radius * c*1000;
+    }
+
+    public void setLocation(double latutide, double longitude){
+        this.latitude = latutide;
+        this.longitude = longitude;
+    }
+
+    @Override
+    public void onPositionChanged() {
+        double arrived = 10.0;
+        Double distance = 0.0;
+        Log.d(TAG, "locationOn: position changed lati: " + latitude + " longi: " + longitude);
+        //EasyWayLocation.Point pointStart = new EasyWayLocation.Point(lati, longi);
+       // EasyWayLocation.Point pointFinal = new EasyWayLocation.Point(target.getLatitude(), target.getLongitude());
+
+                EasyWayLocation.Point pointStart = new EasyWayLocation.Point(latitude, longitude);
+                EasyWayLocation.Point pointFinal = new EasyWayLocation.Point(target.getLatitude(), target.getLongitude());
+                distance = CalculationByDistance(pointStart, pointFinal);
+
+
+        Log.d(TAG, "Distance left: " + Math.floor(distance) + " meter");
+                tvNavStatus.setText(String.valueOf(Math.floor(distance)) + " meter left");
+
+        if(distance < arrived){
+            locationCancelled();
+            Log.d(TAG, "onPositionChanged: " + easyWayLocation.getSpeed());
+          //  Toast.makeText(getActivity().getApplicationContext(), "You have arrived!", Toast.LENGTH_SHORT).show();
+            // FIX this plz
+            controller.fragmentOption("arrivedFragment");
+
+        }
+
+
+
+
+    }
+
+    @Override
+    public void locationCancelled() {
+        easyWayLocation.endUpdates();
+    }
+
+    private class ButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            locationOn();
+            onPositionChanged();
+            Toast.makeText(getContext(), "REFRESHED", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
